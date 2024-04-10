@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <style>
+        body {
+            background-color: skyblue;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Results</h1>
+    <form method="post" action="{% url 'clear_results' %}">
+        {% csrf_token %}
+        <button type="submit">Clear Results</button>
+    </form>
+    <a href="{% url 'access_site_information' %}">Home</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Railway Line</th>
+                <th>Ring Number</th>
+                <th>Hostname</th>
+                <th>BTN Router Type</th>
+                <th>Site Type</th>
+                <th>Timestamp</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for site_info in site_information %}
+            <tr>
+                <td>{{ site_info.railway_line }}</td>
+                <td>{{ site_info.ring_number }}</td>
+                <td>{{ site_info.hostname }}</td>
+                <td>{{ site_info.btn_router_type }}</td>
+                <td>{{ site_info.site_type }}</td>
+                <td>
+                    {% if site_info.results_set.exists %}
+                        {% for result in site_info.results_set.all %}
+                            {{ result.timestamp }}
+                            <br>
+                        {% endfor %}
+                    {% else %}
+                        No results found
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'edit_site_information' site_info.id %}">Edit</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

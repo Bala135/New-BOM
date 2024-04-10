@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Access Site Information</title>
+    <style>
+        body {
+            background-color: skyblue;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        form label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Access Site Information</h1>
+        <div class="datetime" id="datetime"></div>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <p>
+            <label for="{{ field.id_for_label }}" style="display: inline-block; width: 150px; font-weight: bold;">{{ field.label }}</label>
+            {{ field }}
+            {% if field.name == 'hostname' %}
+                {% if field.errors %}
+                    <span style="color: red;">{{ field.errors }}</span>
+                {% endif %}
+            {% endif %}
+        </p>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        function updateDateTime() {
+            var now = new Date();
+            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            var day = days[now.getDay()];
+            var date = now.getDate();
+            var month = months[now.getMonth()];
+            var year = now.getFullYear();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var datetime = day + ', ' + date + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+            document.getElementById('datetime').textContent = datetime;
+        }
+        // Update datetime initially and every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script>
+</body>
+</html>
